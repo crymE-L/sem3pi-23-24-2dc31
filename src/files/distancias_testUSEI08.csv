@@ -1,0 +1,6 @@
+Loc id 1,Loc id 2, length (m)
+CT1,CT2,5
+CT2,CT3,1
+CT3,CT5,1
+CT2,CT4,5
+CT4,CT5,5

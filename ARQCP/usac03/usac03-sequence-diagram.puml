@@ -1,0 +1,71 @@
+@startuml
+
+participant Application
+participant enqueue_value
+
+Application -> enqueue_value: Call enqueue_value(array, length, &read, &write, value_to_insert)
+
+activate enqueue_value
+	enqueue_value -> enqueue_value: Save stack frame and registers
+
+	enqueue_value -> enqueue_value: Move values from parameters
+	enqueue_value -> enqueue_value: Initialize return address as 0
+
+	alt read >= write
+		enqueue_value -> enqueue_value: Set %rax to 0
+		enqueue_value -> enqueue_value: Move value of %r8d to %eax
+		enqueue_value -> enqueue_value: Calculate write address: leaq (%rdi, %r10, 4), %r9
+		enqueue_value -> enqueue_value: Move %eax to the calculated address: movl %eax, (%r9)
+		enqueue_value -> enqueue_value: Increment %r10d (write pointer)
+		enqueue_value -> enqueue_value: Compare %r10d with %esi (limit)
+
+		alt reached the limit
+			enqueue_value -> enqueue_value: Compare %r11d with %esi
+			enqueue_value -> enqueue_value: Jump to finish if not equal
+
+			enqueue_value -> enqueue_value: Reset %r11d to 0
+
+			enqueue_value -> enqueue_value: Move %r10d to (%rcx)
+			enqueue_value -> enqueue_value: Move %r11d to (%rdx)
+
+			enqueue_value -> enqueue_value: Pop %r10
+			enqueue_value -> enqueue_value: Pop %r11
+
+			enqueue_value -> enqueue_value: Leave (restore base pointer)
+			enqueue_value -> Application: Return
+		end
+
+		enqueue_value -> enqueue_value: Reset %r10d to 0 (write = 0)
+	else
+		enqueue_value -> enqueue_value: Move the read to the return address
+		enqueue_value -> enqueue_value: Incremement the return to the next address
+
+		alt (read + 1) >= write
+			enqueue_value -> enqueue_value: Set %rax to 0
+			enqueue_value -> enqueue_value: Move value of %r8d to %eax
+			enqueue_value -> enqueue_value: Calculate write address: leaq (%rdi, %r10, 4), %r9
+			enqueue_value -> enqueue_value: Move %eax to the calculated address: movl %eax, (%r9)
+			enqueue_value -> enqueue_value: Increment %r10d (write pointer)
+
+			alt reached the limit
+				enqueue_value -> enqueue_value: Compare %r11d with %esi
+				enqueue_value -> enqueue_value: Jump to finish if not equal
+
+				enqueue_value -> enqueue_value: Reset %r11d to 0
+
+				enqueue_value -> enqueue_value: Move %r10d to (%rcx)
+				enqueue_value -> enqueue_value: Move %r11d to (%rdx)
+
+				enqueue_value -> enqueue_value: Pop %r10
+				enqueue_value -> enqueue_value: Pop %r11
+
+				enqueue_value -> enqueue_value: Leave (restore base pointer)
+				enqueue_value -> Application: Return
+			end
+
+			enqueue_value -> enqueue_value: Reset write to 0
+		end
+	end
+deactivate
+
+@enduml

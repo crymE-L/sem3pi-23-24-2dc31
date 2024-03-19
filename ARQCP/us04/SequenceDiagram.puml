@@ -1,0 +1,66 @@
+@startuml
+actor user
+participant sort_array
+participant outer_loop
+participant inner_loop
+participant no_swap
+participant end_inner_loop
+
+user -> sort_array: Call sort_array(array, size)
+activate sort_array
+
+sort_array -> sort_array: movq $0, %rdx
+sort_array -> sort_array: movq $0, %rax
+sort_array -> outer_loop
+
+activate outer_loop
+
+loop (Compare %rdx with %esi) is (not equal)
+    outer_loop -> outer_loop: cmpl %edx, %esi
+    alt (Compare %rdx with %esi) is (equal)
+        outer_loop -> user
+    end
+    outer_loop -> outer_loop: movl (%rdi, %rdx, 4), %ecx
+    outer_loop -> outer_loop: movl $0, %eax
+    outer_loop -> inner_loop
+    activate inner_loop
+
+    loop (Compare %eax with %esi) is (not equal)
+        inner_loop -> inner_loop: cmpl %eax, %esi
+        alt (Compare %eax with %esi) is (equal)
+            inner_loop -> end_inner_loop
+            activate end_inner_loop
+            end_inner_loop --> end_inner_loop: incl %edx
+            end_inner_loop --> outer_loop: outer_loop
+            deactivate end_inner_loop
+        end
+        inner_loop -> inner_loop: movl (%rdi, %rax, 4), %r8d
+        inner_loop -> inner_loop: cmpl %r8d, %ecx
+        alt (Compare %ecx with %r8d) is (greater or equal)
+            inner_loop --> no_swap
+            activate no_swap
+            no_swap --> no_swap: incl %eax
+            no_swap --> inner_loop
+            deactivate no_swap
+        end
+        inner_loop -> inner_loop : swap
+        inner_loop --> no_swap
+        activate no_swap
+        no_swap --> no_swap: incl %eax
+        no_swap --> inner_loop
+        deactivate no_swap
+
+
+    end
+    inner_loop -> outer_loop
+    deactivate inner_loop
+
+end
+
+outer_loop -> sort_array
+deactivate outer_loop
+
+sort_array --> user
+
+deactivate sort_array
+@enduml

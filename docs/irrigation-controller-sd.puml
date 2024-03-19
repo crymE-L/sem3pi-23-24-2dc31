@@ -1,0 +1,39 @@
+@startuml
+title checkIrrigation Sequence Diagram
+
+actor User
+participant IrrigationController
+participant FileReadingSystem
+participant FileWritingSystem
+
+User -> IrrigationController: run()
+activate IrrigationController
+
+	IrrigationController -> IrrigationController: showMenu()
+	IrrigationController -> User: Display menu
+	User -> IrrigationController: Choose option 1
+
+	activate FileReadingSystem
+		IrrigationController -> FileReadingSystem: readData()
+		activate FileWritingSystem
+			IrrigationController -> FileWritingSystem: writeLine()
+			IrrigationController -> User: Display irrigation status
+
+			User -> IrrigationController: Choose option 2
+		deactivate FileWritingSystem
+	deactivate FileReadingSystem
+
+	IrrigationController -> IrrigationController: checkIrrigation()
+	activate FileReadingSystem
+		activate FileWritingSystem
+			IrrigationController -> FileReadingSystem: readData()
+			IrrigationController -> FileWritingSystem: writeLine("Day;Sector;Duration;Beginning;End")
+		deactivate FileWritingSystem
+	deactivate FileReadingSystem
+
+
+		IrrigationController -> FileWritingSystem: writeLine(data)
+	activate FileWritingSystem
+
+	IrrigationController -> User: Display result message
+@enduml

@@ -1,0 +1,10 @@
+1,1,soil_humidity,percentage
+2,1,soil_humidity,percentage
+3,1,atmospheric_humidity,percentage
+4,1,atmospheric_humidity,percentage
+5,1,atmospheric_humidity,percentage
+6,1,atmospheric_humidity,percentage
+7,1,atmospheric_temperature,celsius
+8,1,atmospheric_temperature,celsius
+9,1,atmospheric_temperature,celsius
+10,1,atmospheric_temperature,celsius

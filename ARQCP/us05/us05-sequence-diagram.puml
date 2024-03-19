@@ -1,0 +1,28 @@
+@startuml
+participant Application
+participant AssemblyCode
+
+Application -> AssemblyCode: Call mediana(array_pointer, array_size)
+activate AssemblyCode
+
+AssemblyCode -> AssemblyCode: movl %esi, %eax (Array size to %eax)
+AssemblyCode -> AssemblyCode: cmpl $0, %eax (Check if array size is 0)
+    alt Array size != 0
+        AssemblyCode -> AssemblyCode: call sort_array
+        AssemblyCode -> AssemblyCode: cltd (Ensure no bits are lost)
+        AssemblyCode -> AssemblyCode: movl $2, %ecx (Move '2' to %ecx)
+        AssemblyCode -> AssemblyCode: idivl %ecx (Divide array size by 2)
+        AssemblyCode -> AssemblyCode: cmpl $0, %edx (Check if even array)
+       alt Even Array
+            AssemblyCode -> AssemblyCode: movl (%rdi, %rax, 4), %r8d (Store value being pointed)
+            AssemblyCode --> Application: Return median
+        else Odd Array
+            AssemblyCode -> AssemblyCode: movl (%rdi, %rax, 4), %eax (Store value being pointed)
+            AssemblyCode --> Application: Return median
+    end
+    else Array size is 0
+    AssemblyCode --> Application: Return
+    end
+
+deactivate AssemblyCode
+@enduml

@@ -1,0 +1,89 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+class Vehicle {
+    + double autonomy
+    + double averageSpeed
+    + double chargingTime
+}
+
+class Locality {
+    + String name
+    + double x
+    + double y
+    + int collaborators
+    + Srting operatingHours
+}
+
+class HubOptimization {
+    + orderByInfluence(MapGraph<Locality, Double> mapGraph, int numberOfHubs) : List<Locality>
+    + orderByProximity(MapGraph<Locality, Double> mapGraph, int numberOfHubs) : List<Locality>
+    - calculateAverageDistance(MapGraph<Locality, Double> mapGraph, Locality locality) :  double
+    + orderByCentrality(MapGraph<Locality, Double> mapGraph, int numberOfHubs) : List<Locality>
+    - calculateCentrality(MapGraph<Locality, Double> mapGraph, Locality locality) : int
+    - assignCollaborators(List<Locality> hubs) : void
+    - setHubOperatingHours(List<Locality> hubs) : void
+    + orderByAllCriteria(MapGraph<Locality, Double> mapGraph, int numberOfHubs) : Map<String, List<Locality>>
+}
+
+class MapGraph {
+    + Map<V, MapVertex<V, E>> mapVertices
+    + validVertex(V vert) : boolean
+    + adjVertices(V vert) : Collection<V>
+    + edges() : Collectio<Edge<V, E>>
+    + edge(V vOrig, V vDest) : Edge<V, E>
+    + edge(int vOrigKey, int vDestKey) : Edge<V, E>
+    + outDegree(V vert) : int
+    + inDegree(V vert) : int
+    + outgoingEdges(V vert) : Collectio<Edge<V, E>>
+    + incomingEdges(V vert) : Collectio<Edge<V, E>>
+    + addVertex(V vert) : boolean
+    + addEdge(V vOrig, V vDest, E weight) : boolean
+    + removeVertex(V vert) : boolean
+    + removeEdge(V vOrig, V vDest) : boolean
+    + clone() : MapGraph<V, E>
+    + toString() : String
+}
+
+class Algorithms {
+    + BreadthFirstSearch(Graph<V, E> g, V vert) : LinkedList<V>
+    - DepthFirstSearch(Graph<V, E> g, V vOrig, boolean[] visited, LinkedList<V> qdfs) : void
+    + DepthFirstSearch(Graph<V, E> g, V vert) : LinkedList<V>
+    - allPaths(Graph<V, E> g, V vOrig, V vDest, boolean[] visited, LinkedList<V> path, ArrayList<LinkedList<V>> paths) : void
+    + allPaths(Graph<V, E> g, V vOrig, V vDest) : ArrayList<LinkedList<V>>
+    - shortestPathDijkstra(Graph<V, E> g, V vOrig, Comparator<E> ce, BinaryOperator<E> sum, E zero, boolean[] visited, V [] pathKeys, E [] dist) : void
+    + shortestPath(Graph<V, E> g, V vOrig, V vDest, Comparator<E> ce, BinaryOperator<E> sum, E zero, LinkedList<V> shortPath) : E
+    + shortestPaths(Graph<V, E> g, V vOrig, Comparator<E> ce, BinaryOperator<E> sum, E zero, ArrayList<LinkedList<V>> paths, ArrayList<E> dists) : boolean
+    - getPath(Graph<V, E> g, V vOrig, V vDest, V [] pathKeys, LinkedList<V> path) : void
+    + minDistGraph(Graph <V,E> g, Comparator<E> ce, BinaryOperator<E> sum) : MatrixGraph<V,E>
+    + findFarthestPair(Graph<V, E> g) : List<V>
+}
+
+class CSVReadingSystem {
+    + String filename
+    + File filename
+    + short lines
+    + hasValidExtension(String filename) : boolean
+    + isEmpty(String name) : boolean
+    + countFileLines() : short
+    + readData() : ArrayList<ArrayList<String>>
+    + findLine(int line) : String
+    + processData(String dataChunk) : String
+}
+
+class ExcelReadingSystem {
+    + String filename
+    + XSSFSheet sheet
+    + isEmpty(String name) : boolean
+    + hasValidExtension(String filename) : boolean
+    + readData() : ArrayList<ArrayList<String>>
+    + countFileLines() : short
+}
+
+interface FileReading {
+    + readData() : ArrayList<ArrayList<String>>
+}
+
+
+
+@enduml

@@ -1,0 +1,57 @@
+@startuml
+participant "Aplication" as CCode
+participant "Assembly Code" as AssemblyCode
+
+
+
+CCode -> AssemblyCode: Call  extract_token(char* input, char* token, int* output)
+activate AssemblyCode
+
+AssemblyCode -> AssemblyCode: Initialize registers
+AssemblyCode -> AssemblyCode: Set token pointer
+AssemblyCode -> AssemblyCode: Match first character
+    activate AssemblyCode
+    AssemblyCode -> AssemblyCode: Reset token pointer
+    AssemblyCode -> AssemblyCode: Load character from input string
+    AssemblyCode -> AssemblyCode: Compare characters
+    AssemblyCode -> AssemblyCode: Move to the next character in the input string
+    AssemblyCode -> AssemblyCode: Continue searching
+    deactivate AssemblyCode
+
+AssemblyCode -> AssemblyCode: Next character
+    activate AssemblyCode
+    AssemblyCode -> AssemblyCode: Move to the next character in both token and input string
+    AssemblyCode -> AssemblyCode: Load character from token
+    AssemblyCode -> AssemblyCode: Check for null terminator in token
+    AssemblyCode -> AssemblyCode: Copy token value if null terminator
+    AssemblyCode -> AssemblyCode: Compare characters
+    AssemblyCode -> AssemblyCode: If equal, go to the next character
+    AssemblyCode -> AssemblyCode: If not, reset token
+    AssemblyCode -> AssemblyCode: Continue searching
+    deactivate AssemblyCode
+
+AssemblyCode -> AssemblyCode: Copy token value
+    activate AssemblyCode
+    AssemblyCode -> AssemblyCode: Move to the next character in the input string
+    AssemblyCode -> AssemblyCode: Load character from input string
+    AssemblyCode -> AssemblyCode: Check for decimal point
+    AssemblyCode -> AssemblyCode: If decimal point, continue copying
+    AssemblyCode -> AssemblyCode: If less than '0', end
+    AssemblyCode -> AssemblyCode: If greater than '9', end
+    AssemblyCode -> AssemblyCode: Multiply field value by 10
+    AssemblyCode -> AssemblyCode: Convert character to integer
+    AssemblyCode -> AssemblyCode: Add to field value
+    AssemblyCode -> AssemblyCode: Continue copying
+    deactivate AssemblyCode
+
+AssemblyCode -> AssemblyCode: Copy value end
+    activate AssemblyCode
+    AssemblyCode -> AssemblyCode: Move field value to the output
+    AssemblyCode -> AssemblyCode: Return from the function
+    deactivate AssemblyCode
+
+AssemblyCode -> CCode: Return result
+deactivate AssemblyCode
+
+
+@enduml

@@ -1,0 +1,47 @@
+@startuml
+
+actor User
+participant "RegisterOperationController" as Controller
+database "DatabaseConnection" as Database
+
+User -> Controller: run()
+activate Controller
+
+Controller -> Controller: showMenu()
+Controller -> User: Display menu options
+User -> Controller: Choose an option
+
+alt Option 1: Register Seeding
+    Controller -> Controller: registerSeeding()
+    Controller -> User: Input seeding details
+    Controller -> Database: Call registerOperationSeeding
+    Database --> Controller: Result
+    Controller -> User: Display result message
+else Option 2: Register Weed
+    Controller -> Controller: registerWeed()
+    Controller -> User: Input weed details
+    Controller -> Database: Call registerOperationWeed
+    Database --> Controller: Result
+    Controller -> User: Display result message
+else Option 3: Register Harvest
+    Controller -> Controller: registerHarvest()
+    Controller -> User: Input harvest details
+    Controller -> Database: Call registerHarvestOperation
+    Database --> Controller: Result
+    Controller -> User: Display result message
+else Option 4: Register Production Factor
+    Controller -> Controller: registerApplicationOfProductionFactor()
+    Controller -> User: Input production factor details
+    Controller -> Database: Call fncAddOperationApplyProductionFactor
+    Database --> Controller: Result
+    Controller -> User: Display result message
+else Option 5: Exit
+    Controller -> Controller: exit
+    User -> Controller: Exiting
+
+end
+
+Controller -> Main: Call Main.main(null)
+deactivate Controller
+
+@enduml
